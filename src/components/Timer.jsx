@@ -16,15 +16,17 @@ export default function Timer() {
 
     const intervalRef = useRef(null);
     const [showConfirm, setShowConfirm] = useState(false);
+    const [pendingNextLevel, setPendingNextLevel] = useState(false);
 
+    // Skaičiuojam laiką
     useEffect(() => {
-        if (isRunning && !isPaused && intervalRef.current === null) {
+        if (isRunning && !isPaused && intervalRef.current === null && !pendingNextLevel) {
             intervalRef.current = setInterval(() => {
                 setRemainingTime((prev) => {
                     if (prev <= 1) {
                         clearInterval(intervalRef.current);
                         intervalRef.current = null;
-                        nextLevel();
+                        setPendingNextLevel(true); // pažymim kad reikia pereiti į kitą lygį
                         return 0;
                     }
                     return prev - 1;
@@ -32,7 +34,7 @@ export default function Timer() {
             }, 1000);
         }
 
-        if ((!isRunning || isPaused) && intervalRef.current !== null) {
+        if ((!isRunning || isPaused || pendingNextLevel) && intervalRef.current !== null) {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }
@@ -43,7 +45,18 @@ export default function Timer() {
                 intervalRef.current = null;
             }
         };
-    }, [isRunning, isPaused]);
+    }, [isRunning, isPaused, pendingNextLevel]);
+
+    // Kai reikia pereiti į kitą lygį
+    useEffect(() => {
+        if (pendingNextLevel) {
+            const timeout = setTimeout(() => {
+                nextLevel();
+                setPendingNextLevel(false);
+            }, 1000);
+            return () => clearTimeout(timeout);
+        }
+    }, [pendingNextLevel, nextLevel]);
 
     const formatTime = (s) => {
         const m = String(Math.floor(s / 60)).padStart(2, "0");

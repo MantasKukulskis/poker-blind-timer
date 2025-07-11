@@ -21,8 +21,8 @@ export function TournamentProvider({ children }) {
 
         setBlinds(generated);
         setDurationPerLevel(duration);
-        setRemainingTime(duration);
         setCurrentLevel(1);
+        setRemainingTime(duration);
         setIsRunning(true);
         setIsPaused(false);
     };
@@ -31,18 +31,23 @@ export function TournamentProvider({ children }) {
     const resumeTournament = () => setIsPaused(false);
 
     const resetTournament = () => {
-        if (confirm("Ar tikrai nori iš naujo paleisti turnyrą?")) {
-            setIsRunning(false);
-            setIsPaused(false);
-            setCurrentLevel(1);
-            setRemainingTime(durationPerLevel);
-            setBlinds([]);
-        }
+        setIsRunning(false);
+        setIsPaused(false);
+        setCurrentLevel(1);
+        setRemainingTime(durationPerLevel);
+        setBlinds([]);
     };
 
     const nextLevel = () => {
-        setCurrentLevel((lvl) => lvl + 1);
-        setRemainingTime(durationPerLevel);
+        setCurrentLevel((lvl) => {
+            if (lvl < blinds.length) {
+                setRemainingTime(durationPerLevel);
+                return lvl + 1;
+            } else {
+                setIsRunning(false);
+                return lvl;
+            }
+        });
     };
 
     return (
