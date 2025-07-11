@@ -17,10 +17,9 @@ export function TournamentProvider({ children }) {
 
     const startTournament = (settings) => {
         const { duration } = settings;
+        const generated = generateBlinds(settings);
 
-        const generated = generateBlinds(settings); // 👈 generuojam blinds
         setBlinds(generated);
-
         setDurationPerLevel(duration);
         setRemainingTime(duration);
         setCurrentLevel(1);
@@ -28,22 +27,23 @@ export function TournamentProvider({ children }) {
         setIsPaused(false);
     };
 
-    const resetTournament = () => {
-        setIsRunning(false);
-        setIsPaused(false);
-        setCurrentLevel(1);
-        setRemainingTime(durationPerLevel);
-        setBlinds([]);
-    };
-
     const pauseTournament = () => setIsPaused(true);
     const resumeTournament = () => setIsPaused(false);
+
+    const resetTournament = () => {
+        if (confirm("Ar tikrai nori iš naujo paleisti turnyrą?")) {
+            setIsRunning(false);
+            setIsPaused(false);
+            setCurrentLevel(1);
+            setRemainingTime(durationPerLevel);
+            setBlinds([]);
+        }
+    };
 
     const nextLevel = () => {
         setCurrentLevel((lvl) => lvl + 1);
         setRemainingTime(durationPerLevel);
     };
-
 
     return (
         <TournamentContext.Provider
@@ -52,13 +52,14 @@ export function TournamentProvider({ children }) {
                 isPaused,
                 currentLevel,
                 remainingTime,
+                durationPerLevel,
+                blinds,
                 startTournament,
                 pauseTournament,
                 resumeTournament,
                 resetTournament,
                 nextLevel,
                 setRemainingTime,
-                blinds,
             }}
         >
             {children}

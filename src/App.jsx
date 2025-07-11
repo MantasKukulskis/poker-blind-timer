@@ -4,8 +4,6 @@ import SettingsForm from "./components/SettingsForm";
 import Timer from "./components/Timer";
 import BlindDisplay from "./components/BlindDisplay";
 import LevelTable from "./components/LevelTable";
-import Controls from "./components/Controls";
-import FullscreenButton from "./components/FullscreenButton";
 
 function AppContent() {
   const { isRunning, startTournament } = useTournament();
@@ -23,8 +21,6 @@ function AppContent() {
           <Timer />
           <BlindDisplay />
           <LevelTable />
-          <Controls />
-          <FullscreenButton />
         </>
       )}
     </div>

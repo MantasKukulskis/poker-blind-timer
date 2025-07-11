@@ -10,7 +10,7 @@ export default function SettingsForm({ onStart }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         onStart({
-            duration: duration * 60,
+            duration: duration * 60,  // ← BŪTINA konvertuoti į sekundes
             smallBlind,
             bigBlind,
             growthType,

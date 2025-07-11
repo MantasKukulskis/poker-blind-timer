@@ -7,8 +7,8 @@ export function generateBlinds({ smallBlind, bigBlind, growthType, fixedIncrease
     for (let i = 1; i <= levels; i++) {
         blinds.push({
             level: i,
-            smallBlind: sb,  // 👈 čia pervadinta
-            bigBlind: bb,    // 👈 čia pervadinta
+            smallBlind: sb,
+            bigBlind: bb,
         });
 
         if (growthType === "double") {
