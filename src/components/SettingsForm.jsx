@@ -10,7 +10,7 @@ export default function SettingsForm({ onStart }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         onStart({
-            duration: duration * 60, // konvertuojam į sekundes
+            duration: duration * 60,
             smallBlind,
             bigBlind,
             growthType,

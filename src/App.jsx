@@ -2,11 +2,13 @@ import { useTournament } from "./context/TournamentContext";
 import { TournamentProvider } from "./context/TournamentContext";
 import SettingsForm from "./components/SettingsForm";
 import Timer from "./components/Timer";
-import SoundWarning from "./components/SoundWarning"
-import BlindDisplay from "./components/BlindDisplay"
+import BlindDisplay from "./components/BlindDisplay";
+import LevelTable from "./components/LevelTable";
+import Controls from "./components/Controls";
+import FullscreenButton from "./components/FullscreenButton";
 
 function AppContent() {
-  const { isRunning } = useTournament();
+  const { isRunning, startTournament } = useTournament();
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -15,12 +17,14 @@ function AppContent() {
       </h1>
 
       {!isRunning ? (
-        <SettingsForm onStart={() => { }} />
+        <SettingsForm onStart={startTournament} />
       ) : (
         <>
           <Timer />
           <BlindDisplay />
-          <SoundWarning />
+          <LevelTable />
+          <Controls />
+          <FullscreenButton />
         </>
       )}
     </div>

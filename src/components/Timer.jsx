@@ -1,60 +1,55 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useTournament } from "../context/TournamentContext";
 
 export default function Timer() {
     const {
         isRunning,
-        setIsRunning,
+        isPaused,
         remainingTime,
         setRemainingTime,
         nextLevel,
-        currentLevel,
-        blinds,
     } = useTournament();
 
+    const intervalRef = useRef(null);
+
     useEffect(() => {
-        if (!isRunning) return;
+        if (isRunning && !isPaused && intervalRef.current === null) {
+            intervalRef.current = setInterval(() => {
+                setRemainingTime((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(intervalRef.current);
+                        intervalRef.current = null;
+                        nextLevel();
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
 
-        const timer = setInterval(() => {
-            setRemainingTime((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timer);
-                    nextLevel();
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
+        if ((!isRunning || isPaused) && intervalRef.current !== null) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
 
-        return () => clearInterval(timer);
-    }, [isRunning]);
+        return () => {
+            if (intervalRef.current !== null) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, [isRunning, isPaused]);
 
-    // Sekundžių formatavimas į MM:SS
-    const formatTime = (seconds) => {
-        const m = Math.floor(seconds / 60).toString().padStart(2, "0");
-        const s = (seconds % 60).toString().padStart(2, "0");
-        return `${m}:${s}`;
+    const formatTime = (s) => {
+        const m = String(Math.floor(s / 60)).padStart(2, "0");
+        const sec = String(s % 60).padStart(2, "0");
+        return `${m}:${sec}`;
     };
-
-    const currentBlind = blinds.find((b) => b.level === currentLevel);
 
     return (
         <div className="text-center mt-6">
-            <h2 className="text-2xl font-bold mb-2">Lygis {currentLevel}</h2>
-            {currentBlind && (
-                <p className="text-lg mb-4 text-gray-700">
-                    {currentBlind.sb} / {currentBlind.bb}
-                </p>
-            )}
-            <div className="text-4xl font-mono mb-4 text-blue-800">
-                {formatTime(remainingTime)}
-            </div>
-            <button
-                onClick={() => setIsRunning((prev) => !prev)}
-                className="px-6 py-2 rounded text-white bg-blue-600 hover:bg-blue-700"
-            >
-                {isRunning ? "Pause" : "Resume"}
-            </button>
+            <h2 className="text-xl font-bold mb-2">Lygis</h2>
+            <p className="text-4xl font-mono text-blue-700">{formatTime(remainingTime)}</p>
         </div>
     );
 }

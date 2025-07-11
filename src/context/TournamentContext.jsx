@@ -9,48 +9,56 @@ export function useTournament() {
 
 export function TournamentProvider({ children }) {
     const [isRunning, setIsRunning] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
     const [currentLevel, setCurrentLevel] = useState(1);
-    const [remainingTime, setRemainingTime] = useState(0); // sekundėmis
-    const [durationPerLevel, setDurationPerLevel] = useState(0);
+    const [remainingTime, setRemainingTime] = useState(0);
+    const [durationPerLevel, setDurationPerLevel] = useState(60);
     const [blinds, setBlinds] = useState([]);
 
     const startTournament = (settings) => {
-        const generated = generateBlinds(settings);
+        const { duration } = settings;
+
+        const generated = generateBlinds(settings); // 👈 generuojam blinds
         setBlinds(generated);
-        setDurationPerLevel(settings.duration);
-        setRemainingTime(settings.duration);
+
+        setDurationPerLevel(duration);
+        setRemainingTime(duration);
         setCurrentLevel(1);
         setIsRunning(true);
+        setIsPaused(false);
     };
 
     const resetTournament = () => {
         setIsRunning(false);
+        setIsPaused(false);
         setCurrentLevel(1);
+        setRemainingTime(durationPerLevel);
+        setBlinds([]);
+    };
+
+    const pauseTournament = () => setIsPaused(true);
+    const resumeTournament = () => setIsPaused(false);
+
+    const nextLevel = () => {
+        setCurrentLevel((lvl) => lvl + 1);
         setRemainingTime(durationPerLevel);
     };
 
-    const nextLevel = () => {
-        if (currentLevel < blinds.length) {
-            setCurrentLevel((lvl) => lvl + 1);
-            setRemainingTime(durationPerLevel);
-        } else {
-            setIsRunning(false);
-        }
-    };
 
     return (
         <TournamentContext.Provider
             value={{
                 isRunning,
-                setIsRunning,
+                isPaused,
                 currentLevel,
                 remainingTime,
-                setRemainingTime,
-                durationPerLevel,
-                blinds,
                 startTournament,
+                pauseTournament,
+                resumeTournament,
                 resetTournament,
                 nextLevel,
+                setRemainingTime,
+                blinds,
             }}
         >
             {children}
