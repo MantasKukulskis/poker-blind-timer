@@ -17,6 +17,9 @@ export function generateBlinds({ smallBlind, bigBlind, growthType, fixedIncrease
         } else if (growthType === "fixed" && fixedIncrease) {
             sb += fixedIncrease;
             bb += fixedIncrease;
+        } else if (growthType === "standard") {
+            sb += 50;
+            bb += 100;
         }
     }
 

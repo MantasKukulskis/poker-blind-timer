@@ -10,21 +10,27 @@ export function useTournament() {
 export function TournamentProvider({ children }) {
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+    const [isBreak, setIsBreak] = useState(false);
     const [currentLevel, setCurrentLevel] = useState(1);
     const [remainingTime, setRemainingTime] = useState(0);
     const [durationPerLevel, setDurationPerLevel] = useState(60);
+    const [breakEvery, setBreakEvery] = useState(null);
+    const [breakDuration, setBreakDuration] = useState(0);
     const [blinds, setBlinds] = useState([]);
 
     const startTournament = (settings) => {
-        const { duration } = settings;
+        const { duration, breakEvery, breakDuration } = settings;
         const generated = generateBlinds(settings);
 
         setBlinds(generated);
         setDurationPerLevel(duration);
-        setCurrentLevel(1);
         setRemainingTime(duration);
+        setBreakEvery(breakEvery);
+        setBreakDuration(breakDuration);
+        setCurrentLevel(1);
         setIsRunning(true);
         setIsPaused(false);
+        setIsBreak(false);
     };
 
     const pauseTournament = () => setIsPaused(true);
@@ -33,21 +39,22 @@ export function TournamentProvider({ children }) {
     const resetTournament = () => {
         setIsRunning(false);
         setIsPaused(false);
+        setIsBreak(false);
         setCurrentLevel(1);
         setRemainingTime(durationPerLevel);
         setBlinds([]);
     };
 
-    const nextLevel = () => {
-        setCurrentLevel((lvl) => {
-            if (lvl < blinds.length) {
-                setRemainingTime(durationPerLevel);
-                return lvl + 1;
-            } else {
-                setIsRunning(false);
-                return lvl;
-            }
-        });
+    const nextLevel = (levelNumber) => {
+        const shouldBreak = breakEvery && levelNumber > 0 && levelNumber % breakEvery === 0;
+
+        if (shouldBreak) {
+            setIsBreak(true);
+        } else {
+            setRemainingTime(durationPerLevel);
+        }
+
+        return shouldBreak;
     };
 
     return (
@@ -55,6 +62,7 @@ export function TournamentProvider({ children }) {
             value={{
                 isRunning,
                 isPaused,
+                isBreak,
                 currentLevel,
                 remainingTime,
                 durationPerLevel,
@@ -65,6 +73,12 @@ export function TournamentProvider({ children }) {
                 resetTournament,
                 nextLevel,
                 setRemainingTime,
+                breakEvery,
+                breakDuration,
+                setIsBreak,
+                setIsPaused,
+                setIsRunning,
+                setCurrentLevel,
             }}
         >
             {children}

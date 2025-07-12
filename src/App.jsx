@@ -4,6 +4,7 @@ import SettingsForm from "./components/SettingsForm";
 import Timer from "./components/Timer";
 import BlindDisplay from "./components/BlindDisplay";
 import LevelTable from "./components/LevelTable";
+import Timeout from "./components/Timeout";
 
 function AppContent() {
   const { isRunning, startTournament } = useTournament();
@@ -19,6 +20,7 @@ function AppContent() {
       ) : (
         <>
           <Timer />
+          <Timeout />
           <BlindDisplay />
           <LevelTable />
         </>

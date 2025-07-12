@@ -12,13 +12,14 @@ export default function Timer() {
         pauseTournament,
         resumeTournament,
         resetTournament,
+        setCurrentLevel,
+        currentLevel,
     } = useTournament();
 
     const intervalRef = useRef(null);
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingNextLevel, setPendingNextLevel] = useState(false);
 
-    // Skaičiuojam laiką
     useEffect(() => {
         if (isRunning && !isPaused && intervalRef.current === null && !pendingNextLevel) {
             intervalRef.current = setInterval(() => {
@@ -26,7 +27,7 @@ export default function Timer() {
                     if (prev <= 1) {
                         clearInterval(intervalRef.current);
                         intervalRef.current = null;
-                        setPendingNextLevel(true); // pažymim kad reikia pereiti į kitą lygį
+                        setPendingNextLevel(true);
                         return 0;
                     }
                     return prev - 1;
@@ -47,16 +48,19 @@ export default function Timer() {
         };
     }, [isRunning, isPaused, pendingNextLevel]);
 
-    // Kai reikia pereiti į kitą lygį
     useEffect(() => {
         if (pendingNextLevel) {
             const timeout = setTimeout(() => {
-                nextLevel();
+                const broke = nextLevel(currentLevel);
+                if (!broke) {
+                    setCurrentLevel((prev) => prev + 1);
+                }
                 setPendingNextLevel(false);
             }, 1000);
             return () => clearTimeout(timeout);
         }
-    }, [pendingNextLevel, nextLevel]);
+    }, [pendingNextLevel, nextLevel, setCurrentLevel, currentLevel]);
+
 
     const formatTime = (s) => {
         const m = String(Math.floor(s / 60)).padStart(2, "0");
