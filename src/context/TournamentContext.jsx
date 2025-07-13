@@ -50,7 +50,6 @@ export function TournamentProvider({ children }) {
 
         if (shouldBreak) {
             setIsBreak(true);
-            setRemainingTime(breakDuration);
         } else {
             setRemainingTime(durationPerLevel);
         }

@@ -1,5 +1,5 @@
 import { useTournament } from "../context/TournamentContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Fullscreen({ onExit }) {
     const {
@@ -9,14 +9,35 @@ export default function Fullscreen({ onExit }) {
         breakEvery,
         isBreak,
         breakDuration,
-        setIsBreak,
-        setRemainingTime,
     } = useTournament();
 
-    const currentBlind = blinds.find((b) => b.level === currentLevel);
-    const levelsUntilBreak = breakEvery - ((currentLevel - 1) % breakEvery);
-
+    const currentBlind = blinds?.find((b) => b.level === currentLevel);
+    const levelsUntilBreak = breakEvery ? breakEvery - ((currentLevel - 1) % breakEvery) : null;
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [localTime, setLocalTime] = useState(remainingTime);
+    const intervalRef = useRef(null);
+
+    useEffect(() => {
+        setLocalTime(isBreak ? breakDuration : remainingTime);
+    }, [isBreak, remainingTime, breakDuration]);
+
+    useEffect(() => {
+        if (isFullscreen && isBreak) {
+            if (intervalRef.current === null) {
+                intervalRef.current = setInterval(() => {
+                    setLocalTime((prev) => Math.max(0, prev - 1));
+                }, 1000);
+            }
+        } else {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+
+        return () => {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        };
+    }, [isFullscreen, isBreak]);
 
     const formatTime = (s) => {
         const m = String(Math.floor(s / 60)).padStart(2, "0");
@@ -27,9 +48,7 @@ export default function Fullscreen({ onExit }) {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === "Escape") {
-                if (document.fullscreenElement) {
-                    document.exitFullscreen();
-                }
+                if (document.fullscreenElement) document.exitFullscreen();
                 if (onExit) onExit();
             }
         };
@@ -41,7 +60,6 @@ export default function Fullscreen({ onExit }) {
 
         window.addEventListener("keydown", handleKeyDown);
         document.addEventListener("fullscreenchange", handleFullscreenChange);
-
         handleFullscreenChange();
 
         return () => {
@@ -50,37 +68,12 @@ export default function Fullscreen({ onExit }) {
         };
     }, [onExit]);
 
-    useEffect(() => {
-        let interval;
-        if (isFullscreen && isBreak) {
-            interval = setInterval(() => {
-                setRemainingTime((prev) => {
-                    if (prev <= 1) {
-                        clearInterval(interval);
-                        setIsBreak(false);
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        }
-        return () => clearInterval(interval);
-    }, [isFullscreen, isBreak]);
-
-    const backgroundImage = isBreak
-        ? "url('/images/break-background.jpg')"
-        : "url('/images/game-background.jpg')";
-
     return (
-        <div
-            className={`fixed inset-0 z-50 flex flex-col justify-center items-center text-white transition-opacity duration-300 ${isFullscreen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                } overflow-hidden`}
-            style={{ backgroundImage, backgroundSize: "cover", backgroundPosition: "center" }}
-        >
+        <div className={`fixed inset-0 z-50 flex flex-col justify-center items-center text-white transition-opacity duration-300 ${isFullscreen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} bg-gradient-to-br from-black to-gray-900 overflow-hidden`}>
             {isBreak ? (
                 <>
                     <div className="text-7xl font-extrabold mb-12 text-yellow-400 animate-pulse">
-                        {formatTime(remainingTime)}
+                        {formatTime(localTime)}
                     </div>
                     <div className="text-5xl font-bold mb-6 text-red-400 animate-bounce">PERTRAUKA</div>
                     <div className="text-2xl text-gray-300">
@@ -93,14 +86,16 @@ export default function Fullscreen({ onExit }) {
                         {formatTime(remainingTime)}
                     </div>
                     <div className="text-5xl font-bold mb-6">
-                        Lygis {currentBlind?.level}
+                        Lygis {currentBlind?.level || "-"}
                     </div>
                     <div className="text-4xl text-green-400 mb-8">
                         {currentBlind?.smallBlind} / {currentBlind?.bigBlind}
                     </div>
-                    <div className="text-2xl text-gray-300">
-                        Liko {levelsUntilBreak} lyg. iki pertraukos
-                    </div>
+                    {levelsUntilBreak !== null && (
+                        <div className="text-2xl text-gray-300">
+                            Liko {levelsUntilBreak} lyg. iki pertraukos
+                        </div>
+                    )}
                 </>
             )}
         </div>

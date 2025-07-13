@@ -21,8 +21,8 @@ export default function LevelTable() {
                         <tr
                             key={b.level}
                             className={`transition-all duration-200 ${b.level === currentLevel
-                                    ? "bg-yellow-400 text-black font-bold animate-pulse"
-                                    : "bg-gray-800 text-white"
+                                ? "bg-yellow-400 text-black font-bold animate-pulse"
+                                : "bg-gray-800 text-white"
                                 }`}
                         >
                             <td className="p-3">{b.level}</td>

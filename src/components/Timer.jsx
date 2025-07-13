@@ -28,7 +28,7 @@ export default function Timer() {
                         clearInterval(intervalRef.current);
                         intervalRef.current = null;
                         setPendingNextLevel(true);
-
+                        console.log("⏰ Laikas baigėsi — pažymim perėjimą į kitą lygį");
                         return 0;
                     }
                     return prev - 1;
@@ -52,6 +52,7 @@ export default function Timer() {
     useEffect(() => {
         if (pendingNextLevel) {
             const timeout = setTimeout(() => {
+
                 const broke = nextLevel(currentLevel);
                 if (!broke) {
                     setCurrentLevel((prev) => prev + 1);
@@ -81,10 +82,9 @@ export default function Timer() {
     };
 
     return (
-        <div className="text-center my-8">
-            <div className="bg-gradient-to-br from-yellow-600 to-yellow-800 border-4 border-yellow-400 text-white p-6 rounded-2xl shadow-xl inline-block">
-                <p className="text-[5rem] font-mono font-extrabold">{formatTime(remainingTime)}</p>
-            </div>
+        <div className="text-center mt-6">
+            <h2 className="text-xl font-bold mb-2">Lygis</h2>
+            <p className="text-4xl font-mono text-blue-700">{formatTime(remainingTime)}</p>
 
             <div className="mt-6 flex justify-center gap-4 flex-wrap">
                 {!isPaused ? (
