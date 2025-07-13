@@ -10,8 +10,8 @@ function AppContent() {
   const { isRunning, startTournament } = useTournament();
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-6 text-center text-blue-700">
+    <div className="min-h-screen bg-gradient-to-br from-green-950 via-black to-gray-900 text-white p-4">
+      <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-300 drop-shadow-lg tracking-wide uppercase">
         Pokerio Turnyro Laikmatis
       </h1>
 

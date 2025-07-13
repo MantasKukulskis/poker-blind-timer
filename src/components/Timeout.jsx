@@ -11,13 +11,13 @@ export default function Timeout() {
         setRemainingTime,
         setCurrentLevel,
         durationPerLevel,
+        currentLevel,
     } = useTournament();
 
     const [breakTimeLeft, setBreakTimeLeft] = useState(0);
     const [breakEnded, setBreakEnded] = useState(false);
     const intervalRef = useRef(null);
 
-    // Pertraukos pradžia
     useEffect(() => {
         if (isBreak) {
             setBreakTimeLeft(breakDuration);
@@ -26,7 +26,6 @@ export default function Timeout() {
         }
     }, [isBreak]);
 
-    // Skaičiuojam laiką
     useEffect(() => {
         if (isBreak && intervalRef.current === null) {
             intervalRef.current = setInterval(() => {
@@ -34,7 +33,7 @@ export default function Timeout() {
                     if (prev <= 1) {
                         clearInterval(intervalRef.current);
                         intervalRef.current = null;
-                        setBreakEnded(true); // Tik čia pažymim kad baigėsi
+                        setBreakEnded(true);
                         return 0;
                     }
                     return prev - 1;
@@ -50,16 +49,13 @@ export default function Timeout() {
         };
     }, [isBreak]);
 
-    // Tik ČIA padarom visus setState po pertraukos
     useEffect(() => {
         if (breakEnded) {
             setIsBreak(false);
             setIsPaused(false);
             setIsRunning(true);
             setRemainingTime(durationPerLevel);
-            setCurrentLevel((prevLevel) => {
-                return prevLevel + 1;
-            });
+            setCurrentLevel((prevLevel) => prevLevel + 1);
         }
     }, [breakEnded]);
 
@@ -72,11 +68,16 @@ export default function Timeout() {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded shadow-lg text-center">
-                <h2 className="text-2xl font-bold text-yellow-700 mb-2">Pertrauka</h2>
-                <p className="text-4xl text-yellow-800 font-mono">
+        <div
+            className="fixed inset-0 bg-gradient-to-br from-green-900 via-gray-900 to-black z-50 flex items-center justify-center animate-fade-in"
+        >
+            <div className="bg-black bg-opacity-70 border-4 border-yellow-500 p-12 rounded-3xl shadow-2xl text-center transform transition-transform duration-500 animate-scale-up w-[90%] max-w-4xl">
+                <h2 className="text-5xl font-extrabold text-yellow-400 mb-8 uppercase tracking-wider">Poilsio Pertrauka</h2>
+                <p className="text-[7rem] font-mono font-bold text-yellow-200 mb-6">
                     {formatTime(breakTimeLeft)}
+                </p>
+                <p className="text-2xl text-yellow-100 font-semibold">
+                    Po pertraukos – prasidės <span className="text-yellow-300">{currentLevel + 1}</span> lygis
                 </p>
             </div>
         </div>
