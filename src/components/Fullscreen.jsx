@@ -56,6 +56,9 @@ export default function Fullscreen({ onExit }) {
         const handleFullscreenChange = () => {
             const isFs = !!document.fullscreenElement;
             setIsFullscreen(isFs);
+
+            // Hide scroll bar in fullscreen
+            document.body.style.overflow = isFs ? "hidden" : "auto";
         };
 
         window.addEventListener("keydown", handleKeyDown);
@@ -65,17 +68,20 @@ export default function Fullscreen({ onExit }) {
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
             document.removeEventListener("fullscreenchange", handleFullscreenChange);
+            document.body.style.overflow = "auto";
         };
     }, [onExit]);
 
     return (
-        <div className={`fixed inset-0 z-50 flex flex-col justify-center items-center text-white transition-opacity duration-300 ${isFullscreen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} bg-gradient-to-br from-black to-gray-900 overflow-hidden`}>
+        <div className={`fixed inset-0 z-50 flex flex-col justify-center items-center text-white transition-opacity duration-300 ${isFullscreen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} style={{ backgroundImage: "url('/img/in_game.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
             {isBreak ? (
                 <>
                     <div className="text-7xl font-extrabold mb-12 text-yellow-400 animate-pulse">
                         {formatTime(localTime)}
                     </div>
-                    <div className="text-5xl font-bold mb-6 text-red-400 animate-bounce">PERTRAUKA</div>
+                    <div className="text-7xl font-extrabold mb-8 text-red-500 animate-bounce drop-shadow-md tracking-wider">
+                        PERTRAUKA
+                    </div>
                     <div className="text-2xl text-gray-300">
                         Po pertraukos – prasidės lygis {currentLevel + 1}
                     </div>
@@ -93,7 +99,7 @@ export default function Fullscreen({ onExit }) {
                     </div>
                     {levelsUntilBreak !== null && (
                         <div className="text-2xl text-gray-300">
-                            Liko {levelsUntilBreak} lyg. iki pertraukos
+                            Liko {levelsUntilBreak} {levelsUntilBreak === 1 ? "lygis" : "lygiai"} iki pertraukos
                         </div>
                     )}
                 </>
