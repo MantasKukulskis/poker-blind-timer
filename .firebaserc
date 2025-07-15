@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "poker-blind-timer",
+    "live": "poker-blind-timer"
+  },
+  "targets": {},
+  "etags": {}
+}
