@@ -48,6 +48,8 @@ export function TournamentProvider({ children }) {
     const nextLevel = (levelNumber) => {
         const shouldBreak = breakEvery && levelNumber > 0 && levelNumber % breakEvery === 0;
 
+        console.log("🧩 nextLevel į:", levelNumber + 1, "| shouldBreak:", shouldBreak);
+
         if (shouldBreak) {
             setIsBreak(true);
         } else {

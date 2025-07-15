@@ -20,6 +20,7 @@ export default function Timer() {
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingNextLevel, setPendingNextLevel] = useState(false);
 
+    // Laikmatis
     useEffect(() => {
         if (isRunning && !isPaused && intervalRef.current === null && !pendingNextLevel) {
             intervalRef.current = setInterval(() => {
@@ -27,8 +28,6 @@ export default function Timer() {
                     if (prev <= 1) {
                         clearInterval(intervalRef.current);
                         intervalRef.current = null;
-                        setPendingNextLevel(true);
-                        console.log("⏰ Laikas baigėsi — pažymim perėjimą į kitą lygį");
                         return 0;
                     }
                     return prev - 1;
@@ -47,22 +46,30 @@ export default function Timer() {
                 intervalRef.current = null;
             }
         };
-    }, [isRunning, isPaused, pendingNextLevel]);
+    }, [isRunning, isPaused, pendingNextLevel, setRemainingTime]);
 
+    // Kai laikas baigiasi, inicijuoti perėjimą į kitą lygį
+    useEffect(() => {
+        if (isRunning && remainingTime === 0 && !pendingNextLevel) {
+            setPendingNextLevel(true);
+            console.log("⏰ Laikas baigėsi — pažymim perėjimą į kitą lygį");
+        }
+    }, [isRunning, remainingTime, pendingNextLevel]);
+
+    // Kai reikia pereiti į kitą lygį
     useEffect(() => {
         if (pendingNextLevel) {
             const timeout = setTimeout(() => {
-
                 const broke = nextLevel(currentLevel);
                 if (!broke) {
                     setCurrentLevel((prev) => prev + 1);
                 }
                 setPendingNextLevel(false);
             }, 1000);
+
             return () => clearTimeout(timeout);
         }
     }, [pendingNextLevel, nextLevel, setCurrentLevel, currentLevel]);
-
 
     const formatTime = (s) => {
         const m = String(Math.floor(s / 60)).padStart(2, "0");

@@ -4,11 +4,11 @@ import SettingsForm from "./components/SettingsForm";
 import Timer from "./components/Timer";
 import BlindDisplay from "./components/BlindDisplay";
 import LevelTable from "./components/LevelTable";
-import Timeout from "./components/Timeout";
 import Fullscreen from "./components/Fullscreen";
+import Break from "./components/Break";
 
 function AppContent() {
-  const { isRunning, startTournament } = useTournament();
+  const { isRunning, isBreak, startTournament } = useTournament();
 
   return (
     <div
@@ -26,10 +26,11 @@ function AppContent() {
 
       {!isRunning ? (
         <SettingsForm onStart={startTournament} />
+      ) : isBreak ? (
+        <Break />
       ) : (
         <>
           <Timer />
-          <Timeout />
           <BlindDisplay />
           <LevelTable />
           <Fullscreen />
