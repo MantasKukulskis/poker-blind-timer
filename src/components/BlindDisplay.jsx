@@ -14,7 +14,7 @@ export default function BlindDisplay() {
                 Lygis {currentBlind.level}
             </div>
             <div className="text-2xl text-green-400 font-semibold">
-                {currentBlind.smallBlind} / {currentBlind.bigBlind}
+                {currentBlind.small} / {currentBlind.big}
             </div>
         </div>
     );
