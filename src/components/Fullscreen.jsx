@@ -9,6 +9,9 @@ export default function Fullscreen({ onExit }) {
         breakEvery,
         isBreak,
         breakDuration,
+        isPaused,
+        pauseTournament,
+        resumeTournament,
     } = useTournament();
 
     const currentBlind = blinds?.find((b) => b.level === currentLevel);
@@ -56,7 +59,6 @@ export default function Fullscreen({ onExit }) {
         const handleFullscreenChange = () => {
             const isFs = !!document.fullscreenElement;
             setIsFullscreen(isFs);
-
             document.body.style.overflow = isFs ? "hidden" : "auto";
         };
 
@@ -72,7 +74,16 @@ export default function Fullscreen({ onExit }) {
     }, [onExit]);
 
     return (
-        <div className={`fixed inset-0 z-50 flex flex-col justify-center items-center text-white transition-opacity duration-300 ${isFullscreen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} style={{ backgroundImage: "url('/img/in_game.jpg')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
+        <div
+            className={`fixed inset-0 z-50 flex flex-col justify-center items-center text-white transition-opacity duration-300 ${isFullscreen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                }`}
+            style={{
+                backgroundImage: "url('/img/in_game.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+            }}
+        >
             {isBreak ? (
                 <>
                     <div className="text-7xl font-extrabold mb-12 text-yellow-400 animate-pulse">
@@ -90,17 +101,33 @@ export default function Fullscreen({ onExit }) {
                     <div className="text-7xl font-extrabold mb-12 text-yellow-400 animate-pulse">
                         {formatTime(remainingTime)}
                     </div>
-                    <div className="text-5xl font-bold mb-6">
-                        Lygis {currentBlind?.level || "-"}
-                    </div>
+                    <div className="text-5xl font-bold mb-6">Lygis {currentBlind?.level || "-"}</div>
                     <div className="text-4xl text-green-400 mb-8">
                         {currentBlind?.small} / {currentBlind?.big}
                     </div>
                     {levelsUntilBreak !== null && (
-                        <div className="text-2xl text-gray-300">
+                        <div className="text-2xl text-gray-300 mb-6">
                             Liko {levelsUntilBreak} {levelsUntilBreak === 1 ? "lygis" : "lygiai"} iki pertraukos
                         </div>
                     )}
+
+                    <div className="mt-6">
+                        {!isPaused ? (
+                            <button
+                                onClick={pauseTournament}
+                                className="bg-yellow-500 text-black font-bold px-6 py-2 rounded-lg shadow-md"
+                            >
+                                Pause
+                            </button>
+                        ) : (
+                            <button
+                                onClick={resumeTournament}
+                                className="bg-green-500 text-black font-bold px-6 py-2 rounded-lg shadow-md"
+                            >
+                                Resume
+                            </button>
+                        )}
+                    </div>
                 </>
             )}
         </div>

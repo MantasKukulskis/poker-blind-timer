@@ -85,8 +85,7 @@ export default function Timer() {
 
     return (
         <div className="text-center mt-6">
-            <h2 className="text-xl font-bold mb-2">Lygis</h2>
-            <p className="text-4xl font-mono text-blue-700">{formatTime(remainingTime)}</p>
+            <p className="text-8xl font-mono text-blue-700">{formatTime(remainingTime)}</p>
 
             <div className="mt-6 flex justify-center gap-4 flex-wrap">
                 {!isPaused ? (
