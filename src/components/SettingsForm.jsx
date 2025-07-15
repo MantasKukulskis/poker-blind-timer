@@ -1,13 +1,13 @@
 import { useState } from "react";
 
 export default function SettingsForm({ onStart }) {
-    const [duration, setDuration] = useState(0.17); // ~10 sekundžių
+    const [duration, setDuration] = useState(0.17);
     const [smallBlind, setSmallBlind] = useState(10);
     const [bigBlind, setBigBlind] = useState(20);
     const [growthType, setGrowthType] = useState("double");
     const [fixedIncrease, setFixedIncrease] = useState(10);
     const [breakEvery, setBreakEvery] = useState(2);
-    const [breakDuration, setBreakDuration] = useState(0.08); // ~5 sek
+    const [breakDuration, setBreakDuration] = useState(0.08);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -140,9 +140,7 @@ export default function SettingsForm({ onStart }) {
                         setBreakEvery(2);
                         setBreakDuration(0.08);
                     }}
-                    className="w-full mt-2 bg-gray-500 text-white font-semibold py-2 rounded hover:bg-gray-600"
                 >
-                    Demo/Test režimas (10s lygis, 5s pertrauka)
                 </button>
             </form>
         </div>

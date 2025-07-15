@@ -26,8 +26,8 @@ export default function LevelTable() {
                                 }`}
                         >
                             <td className="p-3">{b.level}</td>
-                            <td className="p-3">{b.small}</td> {/* ← pataisyta */}
-                            <td className="p-3">{b.big}</td>   {/* ← pataisyta */}
+                            <td className="p-3">{b.small}</td>
+                            <td className="p-3">{b.big}</td>
                         </tr>
                     ))}
                 </tbody>

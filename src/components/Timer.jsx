@@ -20,7 +20,6 @@ export default function Timer() {
     const [showConfirm, setShowConfirm] = useState(false);
     const [pendingNextLevel, setPendingNextLevel] = useState(false);
 
-    // Laikmatis
     useEffect(() => {
         if (isRunning && !isPaused && intervalRef.current === null && !pendingNextLevel) {
             intervalRef.current = setInterval(() => {
@@ -48,15 +47,12 @@ export default function Timer() {
         };
     }, [isRunning, isPaused, pendingNextLevel, setRemainingTime]);
 
-    // Kai laikas baigiasi, inicijuoti perėjimą į kitą lygį
     useEffect(() => {
         if (isRunning && remainingTime === 0 && !pendingNextLevel) {
             setPendingNextLevel(true);
-            console.log("⏰ Laikas baigėsi — pažymim perėjimą į kitą lygį");
         }
     }, [isRunning, remainingTime, pendingNextLevel]);
 
-    // Kai reikia pereiti į kitą lygį
     useEffect(() => {
         if (pendingNextLevel) {
             const timeout = setTimeout(() => {
@@ -81,7 +77,6 @@ export default function Timer() {
         const el = document.documentElement;
         if (!document.fullscreenElement) {
             el.requestFullscreen().catch((err) => {
-                console.error(`Error trying to enable fullscreen: ${err.message}`);
             });
         } else {
             document.exitFullscreen();

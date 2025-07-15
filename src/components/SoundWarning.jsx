@@ -12,7 +12,6 @@ export default function SoundWarning() {
             hasPlayedRef.current = true;
         }
 
-        // Reset leidimą kai laikas pasikeičia (naujas levelis)
         if (remainingTime > 60) {
             hasPlayedRef.current = false;
         }

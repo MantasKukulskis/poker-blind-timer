@@ -10,10 +10,9 @@ import Break from "./components/Break";
 function AppContent() {
   const { isRunning, isBreak, startTournament } = useTournament();
 
-  // Dinaminis fonas
   const backgroundImage = isBreak
-    ? "url('/img/break.jpg')"  // ← naudok atskirą foną pertraukos metu
-    : "url('/img/main.jpg')";  // ← pagrindinis fonas
+    ? "url('/img/break.jpg')"
+    : "url('/img/main.jpg')";
 
   return (
     <div

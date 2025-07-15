@@ -57,7 +57,6 @@ export default function Fullscreen({ onExit }) {
             const isFs = !!document.fullscreenElement;
             setIsFullscreen(isFs);
 
-            // Hide scroll bar in fullscreen
             document.body.style.overflow = isFs ? "hidden" : "auto";
         };
 
@@ -95,7 +94,7 @@ export default function Fullscreen({ onExit }) {
                         Lygis {currentBlind?.level || "-"}
                     </div>
                     <div className="text-4xl text-green-400 mb-8">
-                        {currentBlind?.smallBlind} / {currentBlind?.bigBlind}
+                        {currentBlind?.small} / {currentBlind?.big}
                     </div>
                     {levelsUntilBreak !== null && (
                         <div className="text-2xl text-gray-300">

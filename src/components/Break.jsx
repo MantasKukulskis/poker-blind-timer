@@ -32,7 +32,6 @@ export default function Break() {
 
     useEffect(() => {
         if (timeLeft === 0) {
-            console.log("⏰ Break.jsx | Laikas baigėsi — pereinam į kitą lygį");
             setIsBreak(false);
             setRemainingTime(durationPerLevel);
             setCurrentLevel((prev) => prev + 1);
@@ -45,9 +44,6 @@ export default function Break() {
         return `${m}:${sec}`;
     };
 
-    // DIAGNOZĖ: Log + safe fallback
-    console.log("🧪 blinds:", blinds);
-    console.log("📍 currentLevel:", currentLevel);
     const blindObj = blinds?.[currentLevel + 1];
     const nextBlinds = (blindObj && blindObj.small && blindObj.big)
         ? blindObj
@@ -55,12 +51,10 @@ export default function Break() {
 
     return (
         <div className="flex flex-col items-center justify-start h-[100vh] text-center pt-2">
-            {/* LAIKRODIS – beveik viršuje */}
             <div className="text-blue-900 text-9xl font-extrabold font-mono mb-4 mt-0">
                 {formatTime(timeLeft)}
             </div>
 
-            {/* Lygis + Blindai – nuleisti dar labiau */}
             <div className="mt-52">
                 <div className="text-indigo-900 text-5xl font-extrabold tracking-widest mb-4">
                     Kitas lygis: {currentLevel + 1}
