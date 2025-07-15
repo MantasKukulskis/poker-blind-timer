@@ -7,9 +7,11 @@ import LevelTable from "./components/LevelTable";
 import Fullscreen from "./components/Fullscreen";
 import Break from "./components/Break";
 import SoundWarning from "./components/SoundWarning";
+import { useTranslation } from "react-i18next";
 
 function AppContent() {
   const { isRunning, isBreak, startTournament } = useTournament();
+  const { t } = useTranslation();
 
   const isFullscreen = document.fullscreenElement !== null;
   const backgroundImage = isBreak
@@ -28,7 +30,7 @@ function AppContent() {
     >
       {!isFullscreen && !isBreak && (
         <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-300 drop-shadow-lg tracking-wide uppercase">
-          Pokerio Turnyro Laikmatis
+          {t("title")}
         </h1>
       )}
 

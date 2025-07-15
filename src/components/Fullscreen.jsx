@@ -1,5 +1,6 @@
 import { useTournament } from "../context/TournamentContext";
 import { useEffect, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function Fullscreen({ onExit }) {
     const {
@@ -13,6 +14,8 @@ export default function Fullscreen({ onExit }) {
         pauseTournament,
         resumeTournament,
     } = useTournament();
+
+    const { t } = useTranslation();
 
     const currentBlind = blinds?.find((b) => b.level === currentLevel);
     const levelsUntilBreak = breakEvery ? breakEvery - ((currentLevel - 1) % breakEvery) : null;
@@ -90,10 +93,10 @@ export default function Fullscreen({ onExit }) {
                         {formatTime(localTime)}
                     </div>
                     <div className="text-7xl font-extrabold mb-8 text-red-500 animate-bounce drop-shadow-md tracking-wider">
-                        PERTRAUKA
+                        {t("break")}
                     </div>
                     <div className="text-2xl text-gray-300">
-                        Po pertraukos – prasidės lygis {currentLevel + 1}
+                        {t("nextLevelStarts", { level: currentLevel + 1 })}
                     </div>
                 </>
             ) : (
@@ -101,13 +104,17 @@ export default function Fullscreen({ onExit }) {
                     <div className="text-7xl font-extrabold mb-12 text-yellow-400 animate-pulse">
                         {formatTime(remainingTime)}
                     </div>
-                    <div className="text-5xl font-bold mb-6">Lygis {currentBlind?.level || "-"}</div>
+                    <div className="text-5xl font-bold mb-6">
+                        {t("level")} {currentBlind?.level || "-"}
+                    </div>
                     <div className="text-4xl text-green-400 mb-8">
                         {currentBlind?.small} / {currentBlind?.big}
                     </div>
                     {levelsUntilBreak !== null && (
                         <div className="text-2xl text-gray-300 mb-6">
-                            Liko {levelsUntilBreak} {levelsUntilBreak === 1 ? "lygis" : "lygiai"} iki pertraukos
+                            {t("levelsUntilBreak", {
+                                count: levelsUntilBreak,
+                            })}
                         </div>
                     )}
 
@@ -117,14 +124,14 @@ export default function Fullscreen({ onExit }) {
                                 onClick={pauseTournament}
                                 className="bg-yellow-500 text-black font-bold px-6 py-2 rounded-lg shadow-md"
                             >
-                                Pause
+                                {t("pause")}
                             </button>
                         ) : (
                             <button
                                 onClick={resumeTournament}
                                 className="bg-green-500 text-black font-bold px-6 py-2 rounded-lg shadow-md"
                             >
-                                Resume
+                                {t("resume")}
                             </button>
                         )}
                     </div>

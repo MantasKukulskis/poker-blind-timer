@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTournament } from "../context/TournamentContext";
 import ConfirmResetModal from "./ConfirmResetModal";
+import { useTranslation } from "react-i18next";
 
 export default function Timer() {
     const {
@@ -15,6 +16,8 @@ export default function Timer() {
         setCurrentLevel,
         currentLevel,
     } = useTournament();
+
+    const { t } = useTranslation();
 
     const intervalRef = useRef(null);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -76,8 +79,7 @@ export default function Timer() {
     const handleFullscreen = () => {
         const el = document.documentElement;
         if (!document.fullscreenElement) {
-            el.requestFullscreen().catch((err) => {
-            });
+            el.requestFullscreen().catch(() => { });
         } else {
             document.exitFullscreen();
         }
@@ -93,27 +95,27 @@ export default function Timer() {
                         className="bg-yellow-500 text-white px-4 py-2 rounded"
                         onClick={pauseTournament}
                     >
-                        Pause
+                        {t("pause")}
                     </button>
                 ) : (
                     <button
                         className="bg-green-600 text-white px-4 py-2 rounded"
                         onClick={resumeTournament}
                     >
-                        Resume
+                        {t("resume")}
                     </button>
                 )}
                 <button
                     className="bg-red-600 text-white px-4 py-2 rounded"
                     onClick={() => setShowConfirm(true)}
                 >
-                    Reset
+                    {t("reset")}
                 </button>
                 <button
                     className="bg-gray-700 text-white px-4 py-2 rounded"
                     onClick={handleFullscreen}
                 >
-                    Fullscreen
+                    {t("fullscreen")}
                 </button>
             </div>
 

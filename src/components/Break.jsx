@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useTournament } from "../context/TournamentContext";
+import { useTranslation } from "react-i18next";
 
 export default function Break() {
     const {
@@ -11,6 +12,8 @@ export default function Break() {
         durationPerLevel,
         blinds,
     } = useTournament();
+
+    const { t } = useTranslation();
 
     const [timeLeft, setTimeLeft] = useState(breakDuration);
     const [breakStarted, setBreakStarted] = useState(false);
@@ -60,17 +63,17 @@ export default function Break() {
     const nextBlinds = blinds?.[currentLevel + 1] ?? { small: "-", big: "-" };
 
     return (
-        <div className="relative flex flex-col items-center justify-start h-[100vh] text-center pt-4 overflow-hidden">
-            <div className="text-blue-900 text-9xl font-extrabold font-mono mt-6 mb-4">
+        <div className="relative flex flex-col items-center justify-start h-[100vh] text-center pt-8 overflow-hidden">
+            <div className="text-blue-900 text-9xl font-extrabold font-mono mt-24 mb-8">
                 {formatTime(timeLeft)}
             </div>
 
-            <div className="mt-64">
-                <div className="text-indigo-900 text-5xl font-extrabold tracking-widest mb-4">
-                    Kitas lygis: {currentLevel + 1}
+            <div className="absolute bottom-24 flex flex-col items-center">
+                <div className="text-indigo-900 text-5xl font-extrabold tracking-widest mb-3">
+                    {t("nextLevel")}: {currentLevel + 1}
                 </div>
                 <div className="text-red-800 text-4xl font-extrabold tracking-wide">
-                    Blindai: {nextBlinds.small} / {nextBlinds.big}
+                    {t("blinds")}: {nextBlinds.small} / {nextBlinds.big}
                 </div>
             </div>
 
@@ -79,7 +82,7 @@ export default function Break() {
                     onClick={() => handleEndBreak(false)}
                     className="bg-yellow-500 hover:bg-yellow-600 text-black text-lg font-bold py-3 px-6 rounded-xl shadow-md transition"
                 >
-                    Tęsti žaidimą dabar
+                    {t("resumeGameNow")}
                 </button>
             </div>
         </div>
